@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     addOneItem(todoItem) {
-      var obj = {completed: false, item: todoItem};
+      const obj = {completed: false, item: todoItem};
       // JSON.stringify: 자바스크립트 객체를 스트링으로 변환해주는 api
       // this.newTodoItem의 값이 string으로 들어가짐
       localStorage.setItem(todoItem, JSON.stringify(obj));
@@ -56,9 +56,9 @@ export default {
       this.todoItems = [];
     }
   },
-    created: function() {
+    created() {
     if(localStorage.length > 0) {
-      for (var i = 0 ; i < localStorage.length ; i ++) {
+      for (let i = 0 ; i < localStorage.length ; i ++) {
         if (localStorage.key(i) !== 'loglevel:webpack-dev-server') {
           this.todoItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
           // this.todoItems.push(localStorage.key(i));
