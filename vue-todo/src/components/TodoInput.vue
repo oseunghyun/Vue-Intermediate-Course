@@ -3,26 +3,38 @@
   <span class="addContainer" @click="addTodo">
     <i class="fas fa-plus addBtn"></i>
   </span>
+
+  <Modal v-if="showModal" @close="showModal = false">
+        <!--
+      you can use custom content here to overwrite
+      default content
+    -->
+        <h3 slot="header">경고
+          <i class="closeModalBtn fas fa-times" @click="showModal = false"></i>
+        </h3>
+        <h5 slot="body">바디: 무언가를 입력하세요.</h5>
+        <h2 slot="footer">푸터: copy right</h2>
+      </Modal>
   </div>
 </template>
 
 <script>
+import Modal from './common/Modal.vue';
 export default {
   data() {
     return {
       newTodoItem: '',
+      showModal: false,
     }
   },
   methods: {
     // 저장하는 로직
     addTodo() {
       if (this.newTodoItem !== '') {
-        var obj = {completed: false, item: this.newTodoItem};
-      // JSON.stringfy: 자바스크립트 객체를 스트링으로 변환해주는 api
-      // this.newTodoItem의 값이 string으로 들어가짐
-      localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
-      // localStorage.setItem(this.newTodoItem, this.newTodoItem);
+      this.$emit('addTodoItem', this.newTodoItem);
       this.clearInput();
+      } else {
+        this.showModal = !this.showModal;
       }
     },
     // 초기화 로직
@@ -30,10 +42,13 @@ export default {
       this.newTodoItem = '';
     },
   },
-}
+  components: {
+    Modal: Modal
+    }
+  }
 </script>
 
-<style scoped>
+<style>
 input:focus {
   outline: none;
 }
@@ -63,4 +78,7 @@ input:focus {
   vertical-align: middle;
 }
 
+.closeModalBtn {
+  color: #42b983;
+}
 </style>

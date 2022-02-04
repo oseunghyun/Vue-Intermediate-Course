@@ -1,46 +1,28 @@
 <template>
   <div>
-    <ul>
-      <li v-for="(todoItem, index) in todoItems" v-bind:key="todoItem.item" class="shadow">
+      <transition-group name="list" tag="ul">
+      <li v-for="(todoItem, index) in propsdata" v-bind:key="todoItem.item" class="shadow">
         <i class="checkBtn fas fa-check" :class="{checkBtnCompleted: todoItem.completed}" @click="toggleComplete(todoItem, index)"></i>
         <span :class="{textCompleted: todoItem.completed}">{{ todoItem.item }}</span>
       <span class="removeBtn" @click="removeTodo(todoItem, index)">
         <i class="fas fa-trash"></i>
       </span>
       </li>
-    </ul>
+      </transition-group>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      todoItems: []
-    }
-  },
-  created: function() {
-    if(localStorage.length > 0) {
-      for (var i = 0 ; i < localStorage.length ; i ++) {
-        if (localStorage.key(i) !== 'loglevel:webpack-dev-server') {
-          this.todoItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
-          // this.todoItems.push(localStorage.key(i));
-        }
-      }
-    }
-  },
+  props: ['propsdata'],
   methods: {
     removeTodo(todoItem, index) {
-    console.log(todoItem, index);
-    localStorage.removeItem(todoItem);
-    // 인덱스에 해당하는 아이템을 지우게 됨
-    this.todoItems.splice(index, 1);
+      this.$emit('removeItem', todoItem, index);
+      
   },
-    toggleComplete(todoItem) {
-      todoItem.completed = !todoItem.completed;
-      // 로컬 스토리지의 데이터를 갱신
-      localStorage.removeItem(todoItem.item);
-      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+    toggleComplete(todoItem, index) {
+      this.$emit('toggleItem', todoItem, index);
+      
     },
   }
 }
@@ -79,5 +61,19 @@ li {
   margin-left: auto;
   color: #de4343;
 }
+
+/* 리스트 아이템 트랜지션 효과 */
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
 
 </style>
