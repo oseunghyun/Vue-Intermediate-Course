@@ -31,9 +31,7 @@ export default {
     // 저장하는 로직
     addTodo() {
       if (this.newTodoItem !== '') {
-      // this.$emit('addTodoItem', this.newTodoItem);
-      const text = this.newTodoItem.trim();
-      this.$store.commit('addOneItem', text);
+      this.$emit('addTodoItem', this.newTodoItem);
       this.clearInput();
       } else {
         this.showModal = !this.showModal;
